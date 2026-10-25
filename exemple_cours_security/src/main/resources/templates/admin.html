@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title>Admin</title>
+</head>
+<body>
+<h2>Zone ADMIN</h2>
+<p>Bienvenue <span sec:authentication="name"></span></p>
+<a th:href="@{/home}">Accueil</a> |
+<a th:href="@{/logout}">Déconnexion</a>
+</body>
+</html>
