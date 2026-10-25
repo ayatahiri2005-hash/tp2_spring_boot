@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Médicaments</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <main class="boite tres-large">
+        <p><a th:href="@{/home}">← Accueil</a></p>
+        <h1>Médicaments</h1>
+
+        <p class="info" th:if="${succes}" th:text="${succes}"></p>
+        <p class="erreur" th:if="${erreur}" th:text="${erreur}"></p>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Nom</th>
+                    <th>Description</th>
+                    <th>Prix</th>
+                    <th>Stock</th>
+                    <th sec:authorize="hasAnyRole('ADMIN','PHARMACIEN')">Modifier le stock</th>
+                    <th sec:authorize="hasRole('ADMIN')"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="m : ${medicaments}">
+                    <td th:text="${m.nom}">Nom</td>
+                    <td th:text="${m.description}">Description</td>
+                    <td th:text="${#numbers.formatDecimal(m.prix, 1, 2)} + ' DH'">0 DH</td>
+                    <td th:text="${m.quantiteStock}"
+                        th:classappend="${m.quantiteStock < 25} ? 'faible'">0</td>
+
+                    <td sec:authorize="hasAnyRole('ADMIN','PHARMACIEN')">
+                        <form class="inline" th:action="@{/medicaments/stock/{id}(id=${m.id})}" method="post">
+                            <input type="number" name="quantiteStock" min="0" th:value="${m.quantiteStock}" required>
+                            <button type="submit" class="petit">Enregistrer</button>
+                        </form>
+                    </td>
+
+                    <td sec:authorize="hasRole('ADMIN')">
+                        <form class="inline" th:action="@{/medicaments/supprimer/{id}(id=${m.id})}" method="post">
+                            <button type="submit" class="petit danger"
+                                    onclick="return confirm('Supprimer ce médicament ?')">Supprimer</button>
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <section sec:authorize="hasRole('ADMIN')">
+            <h2>Ajouter un médicament</h2>
+            <form th:action="@{/medicaments/ajouter}" method="post" class="ligne-form">
+                <div>
+                    <label for="nom">Nom</label>
+                    <input type="text" id="nom" name="nom" required>
+                </div>
+                <div>
+                    <label for="description">Description</label>
+                    <input type="text" id="description" name="description">
+                </div>
+                <div>
+                    <label for="prix">Prix (DH)</label>
+                    <input type="number" id="prix" name="prix" step="0.01" min="0" required>
+                </div>
+                <div>
+                    <label for="quantiteStock">Stock</label>
+                    <input type="number" id="quantiteStock" name="quantiteStock" min="0" value="0" required>
+                </div>
+                <div>
+                    <button type="submit">Ajouter</button>
+                </div>
+            </form>
+        </section>
+    </main>
+</body>
+</html>

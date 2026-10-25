@@ -1,0 +1,37 @@
+
+# Compilation Java et Maven
+target/
+*.class
+
+# Eclipse / Spring Tools Suite (STS)
+.metadata/
+.settings/
+.recommenders/
+.project
+.classpath
+.springBeans
+.sts4-cache/
+
+# IntelliJ IDEA (si utilisé plus tard)
+.idea/
+*.iml
+
+# Visual Studio Code
+.vscode/
+
+# Fichiers temporaires du système
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Fichiers de configuration contenant des secrets
+.env
+.env.*
+!.env.example
+
+# Fichiers locaux de configuration
+application-local.properties
+application-local.yml
+application-local.yaml

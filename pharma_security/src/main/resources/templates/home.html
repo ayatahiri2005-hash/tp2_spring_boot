@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Accueil</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <main class="boite large">
+        <h1>Gestion de pharmacie</h1>
+
+        <p>Connecté en tant que <strong sec:authentication="name">utilisateur</strong></p>
+        <p>Rôles : <span class="badge" sec:authentication="principal.authorities">ROLE</span></p>
+
+        <div class="menu">
+            <a th:href="@{/medicaments}" sec:authorize="hasAnyRole('ADMIN','PHARMACIEN','CLIENT')">Médicaments</a>
+            <a th:href="@{/ventes}" sec:authorize="hasAnyRole('ADMIN','PHARMACIEN','CAISSIER')">Ventes</a>
+            <a th:href="@{/admin}" sec:authorize="hasRole('ADMIN')">Administration</a>
+        </div>
+
+        <form th:action="@{/logout}" method="post">
+            <button type="submit" class="secondaire">Se déconnecter</button>
+        </form>
+    </main>
+</body>
+</html>

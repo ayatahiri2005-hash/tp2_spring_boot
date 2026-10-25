@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Administration</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <main class="boite tres-large">
+        <p><a th:href="@{/home}">← Accueil</a></p>
+        <h1>Administration des utilisateurs</h1>
+
+        <p class="info" th:if="${succes}" th:text="${succes}"></p>
+        <p class="erreur" th:if="${erreur}" th:text="${erreur}"></p>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Identifiant</th>
+                    <th>Rôles</th>
+                    <th>État</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="u : ${utilisateurs}">
+                    <td th:text="${u.id}">1</td>
+                    <td th:text="${u.username}">identifiant</td>
+                    <td>
+                        <span class="badge" th:each="r : ${u.roles}" th:text="${r.nom}">ROLE</span>
+                    </td>
+                    <td th:text="${u.enabled} ? 'Actif' : 'Désactivé'"
+                        th:classappend="${!u.enabled} ? 'faible'">Actif</td>
+                    <td>
+                        <form class="inline" th:action="@{/admin/utilisateurs/{id}/activer(id=${u.id})}" method="post">
+                            <button type="submit" class="petit secondaire"
+                                    th:disabled="${u.username == #authentication.name}"
+                                    th:text="${u.enabled} ? 'Désactiver' : 'Activer'">Désactiver</button>
+                        </form>
+                        <form class="inline" th:action="@{/admin/utilisateurs/{id}/supprimer(id=${u.id})}" method="post">
+                            <button type="submit" class="petit danger"
+                                    th:disabled="${u.username == #authentication.name}"
+                                    onclick="return confirm('Supprimer cet utilisateur ?')">Supprimer</button>
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>Créer un utilisateur</h2>
+        <form th:action="@{/admin/utilisateurs/ajouter}" method="post" class="ligne-form">
+            <div>
+                <label for="username">Identifiant</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div>
+                <label for="password">Mot de passe (6 caractères min.)</label>
+                <input type="password" id="password" name="password" minlength="6" required>
+            </div>
+            <div>
+                <label for="roleId">Rôle</label>
+                <select id="roleId" name="roleId" required>
+                    <option th:each="r : ${roles}" th:value="${r.id}" th:text="${r.nom}">ROLE</option>
+                </select>
+            </div>
+            <div>
+                <button type="submit">Créer</button>
+            </div>
+        </form>
+    </main>
+</body>
+</html>
